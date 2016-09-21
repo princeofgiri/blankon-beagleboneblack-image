@@ -1,0 +1,5 @@
+optargs=
+loadfdt=load mmc ${mmcdev}:1 ${fdtaddr} dtbs/${fdtfile}
+loaduimage=mw.l 4804c134 fe1fffff; if load mmc 0:1 ${loadaddr} zImage; then setenv bootargs noinitrd root=/dev/mmcblk0p2 rootfstype=ext2 rw; mw.l 4804c194 01200000; echo Booting from external microSD...;fi
+mmcboot=run mmcargs; bootz ${loadaddr} - ${fdtaddr}
+uenvcmd=i2c mw 0x24 1 0x3e; run findfdt; if test $board_name = A335BNLT; then setenv mmcdev 1; mmc dev ${mmcdev}; if mmc rescan; then setenv mmc1 1; else setenv mmc1 0; fi; fi; setenv mmcdev 0; mmc dev ${mmcdev}; if mmc rescan; then setenv mmc0 1; else setenv mmc0 0; fi; run loaduimage && run loadfdt && run mmcboot
