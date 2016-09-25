@@ -11,13 +11,13 @@ fi
 
 
 if [ ! -f boot/zImage ];then
-  echo "No kernel found, please put uImage file here"
+  echo "No kernel found, please put zImage file here"
   exit
 fi
 
 rm -rf build/
 mkdir build/
-cp -a boot build/
+cp -rfv boot build/
 
 OUTPUT=beagleboneblack-blankon.img
 
@@ -29,7 +29,7 @@ if [ ! -d devrootfs ];then
 fi
 
 dd if=/dev/zero of=$OUTPUT  bs=1M count=$SIZE
-echo -e "o\nn\np\n1\n\n+100M\nn\np\n\n\n\nw\n" | /sbin/fdisk $OUTPUT 
+echo -e "o\nn\np\n1\n\n+100M\nt\ne\na\nn\np\n\n\n\nw\n" | /sbin/fdisk $OUTPUT 
 sudo modprobe loop
 sudo kpartx -a $OUTPUT
 
@@ -40,12 +40,12 @@ if [ -z $DEV ];then
   exit
 fi
 sleep 1
-sudo mkfs.ext2 /dev/mapper/$DEV
-sudo tune2fs -i 0 -c 0 /dev/mapper/$DEV  -L BlankOn -O ^has_journal
+sudo mkfs.vfat /dev/mapper/$DEV
+#sudo tune2fs -i 0 -c 0 /dev/mapper/$DEV  -L BlankOn -O ^has_journal
 mkdir -p mnt
 sudo mount /dev/mapper/$DEV mnt
 
-sudo cp -a build/boot/* mnt 
+sudo cp -rfv build/boot/* mnt 
 sudo umount mnt
 
 # Second partition
