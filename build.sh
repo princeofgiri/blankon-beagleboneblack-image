@@ -41,7 +41,6 @@ if [ -z $DEV ];then
 fi
 sleep 1
 sudo mkfs.vfat /dev/mapper/$DEV
-#sudo tune2fs -i 0 -c 0 /dev/mapper/$DEV  -L BlankOn -O ^has_journal
 mkdir -p mnt
 sudo mount /dev/mapper/$DEV mnt
 
@@ -60,6 +59,8 @@ sudo tune2fs -i 0 -c 0 /dev/mapper/$DEV  -L BlankOn -O ^has_journal
 
 mkdir -p mnt
 sudo mount /dev/mapper/$DEV mnt
+echo "Creating /etc/fstab"
+echo "/dev/mmcblk0p2" > /etc/fstab
 sudo cp -a devrootfs/* mnt 
 sudo umount mnt
 
