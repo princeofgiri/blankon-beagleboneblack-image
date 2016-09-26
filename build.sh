@@ -60,7 +60,7 @@ sudo tune2fs -i 0 -c 0 /dev/mapper/$DEV  -L BlankOn -O ^has_journal
 mkdir -p mnt
 sudo mount /dev/mapper/$DEV mnt
 echo "Creating /etc/fstab"
-echo "/dev/mmcblk0p2" > /etc/fstab
+echo "/dev/mmcblk0p2  / ext2 defaults 1 2" > devrootfs/etc/fstab
 sudo cp -a devrootfs/* mnt 
 sudo umount mnt
 
